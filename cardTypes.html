@@ -68,6 +68,9 @@
           formattedNumber += value[i];
         }
         input.value = formattedNumber;
+        input.setAttribute("maxlength", Math.max(...result.lengths));
+      } else {
+        input.removeAttribute("maxlength");
       }
       console.log(": ",formattedNumber);
       cvvLabel.textContent = hasMatch ? result.code.name : "";
