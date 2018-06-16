@@ -1,0 +1,62 @@
+[
+    {
+        "type": "American Express",
+        "value": "378282246310005"
+    },
+    {
+        "type": "American Express",
+        "value": "371449635398431"
+    },
+    {
+        "type": "American Express",
+        "value": "378734493671000"
+    },
+    {
+        "type": "Australian BankCard",
+        "value": "5610591081018250"
+    },
+    {
+        "type": "Diners Club",
+        "value": "30569309025904"
+    },
+    {
+        "type": "Diners Club",
+        "value": "38520000023237"
+    },
+    {
+        "type": "Discover",
+        "value": "6011111111111117"
+    },
+    {
+        "type": "Discover",
+        "value": "6011000990139424"
+    },
+    {
+        "type": "JCB",
+        "value": "3530111333300000"
+    },
+    {
+        "type": "JCB",
+        "value": "3566002020360505"
+    },
+    {
+        "type": "MasterCard",
+        "value": "5555555555554444"
+    },
+    {
+        "type": "MasterCard",
+        "value": "5105105105105100"
+    },
+    {
+        "type": "Visa",
+        "value": "4111111111111111"
+    },
+    {
+        "type": "Visa",
+        "value": "4012888888881881"
+    },
+    {
+        "type": "Visa",
+        "value": "4222222222222"
+    }
+]

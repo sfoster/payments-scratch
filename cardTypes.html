@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  <h1>BIN lookup &amp; PAN formatting</h1>
+
+  <p style="display:inline-block">
+    <label for="cardNumber">PAN</label><br>
+    <input type="text" id="cardNumber" placeholder="4111 1111 1111 111">
+  </p>
+  <p style="display:inline-block">
+    <label for="securityCode" id="securityCodeLabel">CVV</label><br>
+    <input size="3" id="securityCode" placeholder="000">
+  </p>
+  <pre id="output">
+  </pre>
+
+  <script type="module">
+    import { creditCardType } from "./vendor/braintree/credit-card-type/index.js";
+
+    function handleInput(evt) {
+      let msg = document.querySelector("#output");
+      let input = evt.target;
+      let cvvLabel = document.querySelector("#securityCodeLabel");
+      let cvvInput = document.querySelector("#securityCode");
+
+      let str = "";
+      let value = input.value.replace(/\s+/g, "");
+      let results = creditCardType(value);
+      let result;
+      if (!results.length) {
+        console.log(`no matches for ${value}`);
+        return;
+      }
+      for (result of results) {
+        let codePlaceholder = result.code.size
+        str += `${result.niceType}, ${result.code.name}: ${"0".repeat(result.code.size)}\n`;
+      }
+      let formattedNumber = "";
+      for(let i=0; i<value.length; i++) {
+        if (result.gaps.includes(i)) {
+          formattedNumber += " ";
+        }
+        formattedNumber += value[i];
+      }
+      input.value = formattedNumber;
+      cvvLabel.textContent = result.code.name;
+      cvvInput.placeholder = "0".repeat(result.code.size);
+      msg.textContent = JSON.stringify(results, null, 2);
+    }
+    function init() {
+      let input = document.querySelector("#cardNumber");
+      input.addEventListener("input", handleInput);
+      handleInput({ target: input });
+    }
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
+
+
