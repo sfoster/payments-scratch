@@ -2,18 +2,40 @@
 <html lang="en-US">
 <head>
   <meta charset="utf-8">
+  <style type="text/css">
+    #typeLabel {
+      display: none;
+    }
+    #typeLabel::before {
+      content: "«";
+    }
+
+    #typeLabel::after {
+      content: "»";
+    }
+
+    #typeLabel:not(:empty) {
+      display: inline-block;
+    }
+  </style>
 </head>
 <body>
   <h1>BIN lookup &amp; PAN formatting</h1>
 
+  <p>Start typing or use the picker to try sample numbers</p>
+
   <p style="display:inline-block">
-    <label for="cardNumber">PAN</label><br>
-    <input type="text" id="cardNumber" placeholder="4111 1111 1111 111">
+    <label for="cardNumber">PAN</label> <span id="typeLabel"></span><br>
+    <input type="text" id="cardNumber">
   </p>
   <p style="display:inline-block">
     <label for="securityCode" id="securityCodeLabel">CVV</label><br>
     <input size="3" id="securityCode" placeholder="000">
   </p>
+  <h2>Sample numbers</h2>
+  <select id="sampleNumbers">
+    <option value="">Pick a number...</option>
+  </select>
   <pre id="output">
   </pre>
 
@@ -25,35 +47,58 @@
       let input = evt.target;
       let cvvLabel = document.querySelector("#securityCodeLabel");
       let cvvInput = document.querySelector("#securityCode");
+      let typeLabel = document.querySelector("#typeLabel");
 
       let str = "";
       let value = input.value.replace(/\s+/g, "");
       let results = creditCardType(value);
       let result;
-      if (!results.length) {
-        console.log(`no matches for ${value}`);
-        return;
-      }
-      for (result of results) {
-        let codePlaceholder = result.code.size
-        str += `${result.niceType}, ${result.code.name}: ${"0".repeat(result.code.size)}\n`;
-      }
+      let hasMatch = results.length && value.length;
       let formattedNumber = "";
-      for(let i=0; i<value.length; i++) {
-        if (result.gaps.includes(i)) {
-          formattedNumber += " ";
+
+      if (results.length) {
+        for (result of results) {
+          let codePlaceholder = result.code.size
+          str += `${result.niceType}, ${result.code.name}: ${"0".repeat(result.code.size)}\n`;
         }
-        formattedNumber += value[i];
+        for(let i=0; i<value.length; i++) {
+          if (result.gaps.includes(i)) {
+            formattedNumber += " ";
+          }
+          formattedNumber += value[i];
+        }
+        input.value = formattedNumber;
       }
-      input.value = formattedNumber;
-      cvvLabel.textContent = result.code.name;
-      cvvInput.placeholder = "0".repeat(result.code.size);
-      msg.textContent = JSON.stringify(results, null, 2);
+      console.log(": ",formattedNumber);
+      cvvLabel.textContent = hasMatch ? result.code.name : "";
+      cvvInput.placeholder = hasMatch ? "0".repeat(result.code.size) : "";
+      typeLabel.textContent = hasMatch ? result.niceType : "";
+      msg.textContent = hasMatch ? JSON.stringify(results, null, 2) : "";
     }
-    function init() {
+    async function init() {
       let input = document.querySelector("#cardNumber");
       input.addEventListener("input", handleInput);
       handleInput({ target: input });
+
+      let entries = await fetch("./sampleNumbers.json").then(resp => resp.json());
+
+      let selectNode = document.querySelector("#sampleNumbers");
+      let fragment = document.createDocumentFragment();
+      for (let entry of entries) {
+        let option = new Option(entry.value, entry.type);
+        fragment.appendChild(option);
+      }
+      selectNode.appendChild(fragment);
+      selectNode.addEventListener("input", evt => {
+        let selectedOption = selectNode.options[selectNode.selectedIndex];
+        if (selectedOption && selectedOption.value) {
+          input.value = selectedOption.textContent;
+        } else {
+          input.value = "";
+        }
+        handleInput({ target: input });
+        console.log("select input event: ", selectedOption);
+      });
     }
     document.addEventListener("DOMContentLoaded", init);
   </script>
