@@ -68,7 +68,9 @@
           formattedNumber += value[i];
         }
         input.value = formattedNumber;
-        input.setAttribute("maxlength", Math.max(...result.lengths));
+        // maxlength on the field should be the longest number + the gaps
+        let maxLen = Math.max(...result.lengths) + result.gaps.length;
+        input.setAttribute("maxlength", maxLen);
         securityCode.setAttribute("maxlength", result.code.size);
       } else {
         input.removeAttribute("maxlength");
