@@ -1,0 +1,103 @@
+<!doctype HTML>
+<html>
+<head>
+</head>
+<body>
+<h1>supportedNetworks</h1>
+
+<ul>
+  <li><label><input type="checkbox" value="amex">American Express</label></li>
+  <li><label><input type="checkbox" value="cartebancaire">Carte Bancaire</label></li>
+  <li><label><input type="checkbox" value="diners">Diners Club</label></li>
+  <li><label><input type="checkbox" value="discover">Discover</label></li>
+  <li><label><input type="checkbox" value="jcb">JCB</label></li>
+  <li><label><input type="checkbox" value="mastercard">Mastercard</label></li>
+  <li><label><input type="checkbox" value="mir">MIR</label></li>
+  <li><label><input type="checkbox" value="unionpay">Unionpay</label></li>
+  <li><label><input type="checkbox" value="visa">Visa</label></li>
+  <li><label><input type="checkbox" value="gringotts"> Gringotts Goblin Bank (invalid)</label></li>
+</ul>
+<button id="pay">Pay with the selected supportedNetworks</button>
+<h2>methodData</h2>
+<pre id="output" style="outline: 1px dotted #999">
+
+</pre>
+
+<script>
+/**
+ * Pops up a payment sheet, allowing options to be
+ * passed in if particular values are needed.
+ *
+ * @param PaymentOptions options
+ */
+async function getPaymentResponse(options, id) {
+  const { response } = getPaymentRequestResponse(options, id);
+  return response;
+}
+
+/**
+ * Creates a payment request and response pair.
+ * It also shows the payment sheet.
+ *
+ * @param {PaymentOptions?} options
+ * @param {String?} id
+ */
+async function getPaymentRequestResponse(methods, details, options, id) {
+  if (!methods) {
+    methods = [{ supportedMethods: "basic-card" }];
+  }
+  if (!details) {
+    details = {
+      id,
+      total: {
+        label: "Total due",
+        amount: { currency: "USD", value: "1.0" },
+      },
+    };
+  }
+  const request = new PaymentRequest(methods, details, options);
+  request.onshippingaddresschange = ev => ev.updateWith(details);
+  request.onshippingoptionchange = ev => ev.updateWith(details);
+  const response = await request.show();
+  return { request, response };
+}
+
+</script>
+<script>
+async function payWithNetworks() {
+  let request, response;
+  let supportedNetworks = Array.from(document.querySelectorAll("input[type='checkbox']"))
+                            .filter(input => input.checked)
+                            .map(input => input.value);
+  let methods = [{
+    supportedMethods: "basic-card",
+    data: {
+      supportedNetworks
+    },
+  }];
+
+  report(methods);
+
+  try {
+    let result = await getPaymentRequestResponse(methods);
+    request = result.request;
+    response = result.response;
+  } catch (ex) {
+    console.log("exception from getPaymentRequestResponse: ", ex);
+    return;
+  }
+  console.log("response: ", response, response.completeStatus);
+  response.complete(outcome);
+}
+
+
+function report(methods) {
+  document.querySelector("#output").textContent = `
+  methods: ${JSON.stringify(methods, null, 2)}
+  `
+}
+
+document.querySelector("#pay").onclick = payWithNetworks;
+</script>
+</body>
+</html>
