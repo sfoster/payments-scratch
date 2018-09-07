@@ -4,7 +4,7 @@
 echo "# PaymentRequest test/demo/example pages and resources"
 echo ""
 
-for filepath in `find -maxdepth 1 -mindepth 1| grep -v '/\.' | sort`; do
+for filepath in `find -maxdepth 1 -mindepth 1| grep -v '/\.' | grep -v '/index\.' | sort`; do
   path=`basename "$filepath"`
   if [ -f $filepath ]
   then
