@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+<h1>Merchant-supplied Errors</h1>
+
+<button id="pay-badaddress">Bad address</button>
+
+<h2>Output</h2>
+<pre id="output" style="outline: 1px dotted #999">
+
+</pre>
+
+<script>
+
+const validMethod = Object.freeze({
+  supportedMethods: "basic-card",
+});
+
+const validMethods = Object.freeze([validMethod]);
+
+const validAmount = Object.freeze({
+  currency: "USD",
+  value: "1.00",
+});
+
+const validTotal = Object.freeze({
+  label: "Valid total",
+  amount: validAmount,
+});
+const validDetails = {
+  total: validTotal,
+
+};
+
+</script>
+<script>
+async function delay(ms) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+}
+
+async function badAddress(options = {}, id) {
+  options = Object.assign(options, { requestShipping: true });
+  // make request
+  // listen for shippingchange
+  // send update with error text for address in CA
+  const methods = [{ supportedMethods: "basic-card" }];
+  const details = {
+    id,
+    total: {
+      label: "Total due",
+      amount: { currency: "USD", value: "1.0" },
+    },
+    shippingOptions: [
+      {
+        id: "fail1",
+        label: "Fail option 1",
+        amount: { currency: "USD", value: "5.00" },
+        selected: false,
+      },
+      {
+        id: "pass",
+        label: "Pass option",
+        amount: { currency: "USD", value: "5.00" },
+        selected: true,
+      },
+      {
+        id: "fail2",
+        label: "Fail option 2",
+        amount: { currency: "USD", value: "5.00" },
+        selected: false,
+      },
+    ],
+  };
+  const request = new PaymentRequest(methods, details, options);
+  request.onshippingaddresschange = ev => {
+    console.log("onshippingaddresschange got address: ", ev.target.shippingAddress);
+    const promiseForNewDetails = getNewDetails(details);
+    ev.updateWith(promiseForNewDetails);
+  };
+  request.onshippingoptionchange = ev => ev.updateWith(details);
+  const response = await request.show();
+
+  let outcome = 'success';
+  await delay(500);
+  await response.complete(outcome);
+  report(response, outcome);
+}
+
+function getNewDetails(deets) {
+  return Object.assign(deets, {
+    error: "I hate you and everything about your stupid shipping address.",
+    shippingAddressErrors: {
+      addressLine: "Can only ship to ROADS, not DRIVES, BOULEVARDS, or STREETS",
+      city: "Can only ship to CITIES, not TOWNSHIPS or VILLAGES",
+      country: "Can only ship to USA, not CA",
+      organization: "Can only ship to CORPORATIONS, not CONSORTIUMS",
+      phone: "Only allowed to ship to area codes that start with 9",
+      postalCode: "Only allowed to ship to postalCodes that start with 0",
+      recipient: "Can only ship to names that start with J",
+      region: "Can only ship to regions that start with M",
+    },
+  });
+}
+
+function report(response, outcome, ex) {
+  if (ex) {
+    outcome = `${outcome}
+    ${ex}`;
+  }
+  document.querySelector("#output").textContent = `
+  transaction ${outcome}
+
+  response: ${JSON.stringify(response, null, 2)}
+  `
+}
+
+document.querySelector("#pay-badaddress").onclick = badAddress;
+</script>
+</body>
+</html>
