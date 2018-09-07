@@ -1,0 +1,173 @@
+<!doctype HTML>
+<html>
+<head>
+  <style>
+    th, td {
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+<h1>Card Test PANs</h1>
+
+<section>
+<h1>Approved Network IDs for Basic Card</h1>
+  <ul>
+    <li>amex</li>
+    <li>cartebancaire</li>
+    <li>diners</li>
+    <li>discover</li>
+    <li>jcb</li>
+    <li>mastercard</li>
+    <li>mir</li>
+    <li>unionpay</li>
+    <li>visa</li>
+  </ul>
+  <cite><a href="https://www.w3.org/Payments/card-network-ids">Card Network Identifiers Approved for use with Payment Request API (w3c)</a></cite>
+</section>
+
+<table>
+  <thead>
+    <tr>
+      <th>Credit Card Type</th>
+      <th>Credit Card Number</th>
+      <th>Network id</th>
+      <th>Note</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>American Express</td>
+      <td>378282246310005</td>
+      <td>amex</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>American Express</td>
+      <td>371449635398431</td>
+      <td>amex</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>American Express Corporate</td>
+      <td>378734493671000</td>
+      <td>amex</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Australian BankCard</td>
+      <td>5610591081018250</td>
+      <td>maestro</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Maestro</td>
+      <td>6759649826438453</td>
+      <td>maestro</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Maestro</td>
+      <td>6799990100000000019</td>
+      <td>maestro</td>
+      <td>19 digits!</td>
+    </tr>
+    <tr>
+      <td>Diners Club</td>
+      <td>30569309025904</td>
+      <td>diners</td>
+      <td>Braintree library reports the "type" of diners-club</td>
+    </tr>
+    <tr>
+      <td>Diners Club</td>
+      <td>38520000023237</td>
+      <td>diners</td>
+      <td>Braintree library reports the "type" of diners-club</td>
+    </tr>
+    <tr>
+      <td>Discover</td>
+      <td>6011111111111117</td>
+      <td>discover</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Discover</td>
+      <td>6011000990139424</td>
+      <td>discover</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>JCB</td>
+      <td>3530111333300000</td>
+      <td>jcb</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>JCB</td>
+      <td>3566002020360505</td>
+      <td>jcb</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>MasterCard</td>
+      <td>5555555555554444</td>
+      <td>mastercard</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>MasterCard</td>
+      <td>5105105105105100</td>
+      <td>mastercard</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>MasterCard</td>
+      <td>2221000000000009</td>
+      <td>mastercard</td>
+      <td>2-series Mastercard PAN</td>
+    </tr>
+
+    <tr>
+      <td>Visa</td>
+      <td>4111111111111111</td>
+      <td>visa</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Visa</td>
+      <td>4012888888881881</td>
+      <td>visa</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Visa</td>
+      <td>4222222222222</td>
+      <td>visa</td>
+      <td>13 digits! Even though this number has a different character count than the other test numbers, it is the correct and functional number.</td>
+    </tr>
+    <tr>
+      <td>Visadebit/Cartebancaire</td>
+      <td>4035 5010 0000 0008</td>
+      <td></td>
+      <td>Is supposed to be cartebancaire, but binlist.net reports as Visa?</td>
+    </tr>
+    <tr>
+      <td>Cartebancaire</td>
+      <td>4360 0000 0100 0005</td>
+      <td></td>
+      <td>Is supposed to be cartebancaire, but binlist.net reports as Visa?</td>
+    </tr>
+  </tbody>
+</table>
+
+<section>
+  <h1>More Test Numbers and Resources</h1>
+  <ul>
+    <li><a href="http://support.worldpay.com/support/kb/bg/testandgolive/tgl5103.html">support.worldpay.com</a>
+    </li>
+    <li><a href="https://www.darkcoding.net/credit-card-numbers/">darkcoding.net</a></li>
+  </ul>
+</section>
+
+</body>
+</html>
