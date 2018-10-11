@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  <h1>Luhn Algorithm</h1>
+  <p>The <a href="https://en.wikipedia.org/wiki/Luhn_algorithm">Luhn algorithm</a> is a checksum formula that pretty much all <a href="https://en.wikipedia.org/wiki/Payment_card_number">payment card numbers</a> should pass. It is one component of determining if a given number could be a valid credit/debit card number.</p>
+
+  <p><input type="text" id="num" value=""> <span id="len"></span> <span id="pass"></span></p>
+
+  <script type="text/javascript">
+    function luhnCheck(number) {
+      let total = 0;
+      number = number.replace(/[\-\s]/g, "");
+      let len = number.length;
+      console.log("number length: ", len);
+      for (let i = 0; i < len; i++) {
+        let ch = parseInt(number[len - i - 1], 10);
+        if (i % 2 == 1) {
+          ch *= 2;
+          if (ch > 9) {
+            ch -= 9;
+          }
+          console.log(`index ${i} is odd, ch: ${number[len - i - 1]} becomes ${ch}`);
+        }
+        total += ch;
+        console.log(`add ${ch} to total: ${total}`);
+      }
+      return total % 10 == 0;
+    }
+    document.querySelector("#num").addEventListener("input", e => {
+      let number = e.target.value.replace(/[\s\-]/g, '');
+      document.querySelector("#len").textContent = "length: " + number.length;
+      document.querySelector("#pass").textContent = luhnCheck(number) ? "pass" : "fail";
+    });
+  </script>
+</body>
+</html>
